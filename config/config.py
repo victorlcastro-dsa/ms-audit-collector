@@ -9,4 +9,4 @@ class Config:
     CLIENT_SECRET = os.getenv("CLIENT_SECRET")
     AUTHORITY = os.getenv("AUTHORITY")
     SCOPE = [os.getenv("SCOPE")]
-    ENDPOINT = os.getenv("ENDPOINT")
+    ENDPOINT_USER_ACTIVITY = os.getenv("ENDPOINT_USER_ACTIVITY")

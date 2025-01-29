@@ -1,28 +1,32 @@
 import pandas as pd
 import xlsxwriter
 
-def save_audit_logs_to_excel(processed_logs):
-    final_df = pd.DataFrame(processed_logs)
+def save_audit_logs_to_excel(user_activity_logs, site_info, drives, folders, subfolders, user_info_list):
+    writer = pd.ExcelWriter("Audit_Accounts_Receivable.xlsx", engine="xlsxwriter")
 
-    # Creating the Excel file
-    filename = "Audit_Accounts_Receivable.xlsx"
-    writer = pd.ExcelWriter(filename, engine="xlsxwriter")
-    final_df.to_excel(writer, sheet_name="Audit", index=False)
+    # Save user activity logs
+    user_activity_df = pd.DataFrame(user_activity_logs)
+    user_activity_df.to_excel(writer, sheet_name="User Activity", index=False)
 
-    # Styling the Excel file
-    workbook = writer.book
-    worksheet = writer.sheets["Audit"]
+    # Save site info
+    site_info_df = pd.DataFrame([site_info])
+    site_info_df.to_excel(writer, sheet_name="Site Info", index=False)
 
-    header_format = workbook.add_format({
-        "bold": True, "bg_color": "#4F81BD", "font_color": "white", "border": 1
-    })
+    # Save drives
+    drives_df = pd.DataFrame(drives)
+    drives_df.to_excel(writer, sheet_name="Drives", index=False)
 
-    for col_num, value in enumerate(final_df.columns.values):
-        worksheet.write(0, col_num, value, header_format)
+    # Save folders
+    folders_df = pd.DataFrame(folders)
+    folders_df.to_excel(writer, sheet_name="Folders", index=False)
 
-    for i, col in enumerate(final_df.columns):
-        max_length = max(final_df[col].astype(str).map(len).max(), len(col)) + 2
-        worksheet.set_column(i, i, max_length)
+    # Save subfolders
+    subfolders_df = pd.DataFrame(subfolders)
+    subfolders_df.to_excel(writer, sheet_name="Subfolders", index=False)
+
+    # Save user info
+    user_info_df = pd.DataFrame(user_info_list)
+    user_info_df.to_excel(writer, sheet_name="User Info", index=False)
 
     writer.close()
-    print(f"✅ Audit saved in: {filename}")
+    print("✅ Audit saved in: Audit_Accounts_Receivable.xlsx")

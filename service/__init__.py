@@ -1,1 +1,1 @@
-from .sharepoint import get_sharepoint_activity_logs
+from .sharepoint_user_activity import get_sharepoint_user_activity_logs

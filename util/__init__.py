@@ -1,1 +1,1 @@
-from .processor import process_activity_logs
+from .processor import process_user_activity_logs
