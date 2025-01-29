@@ -1,18 +1,14 @@
 import pandas as pd
 import xlsxwriter
-from util import filter_user_activity, filter_drives, filter_folders, filter_subfolders
+from util.filters import filter_user_activity, filter_drives, filter_folders, filter_subfolders
 
-def save_audit_logs_to_excel(user_activity_logs, site_info, drives, folders, subfolders):
+def save_audit_logs_to_excel(user_activity_logs, drives, folders, subfolders):
     writer = pd.ExcelWriter("Audit_Accounts_Receivable.xlsx", engine="xlsxwriter")
 
     # Save user activity logs
     user_activity_df = pd.DataFrame(user_activity_logs)
     user_activity_df = filter_user_activity(user_activity_df)
     user_activity_df.to_excel(writer, sheet_name="User Activity", index=False)
-
-    # Save site info
-    site_info_df = pd.DataFrame([site_info])
-    site_info_df.to_excel(writer, sheet_name="Site Info", index=False)
 
     # Save drives
     drives_df = pd.DataFrame(drives)

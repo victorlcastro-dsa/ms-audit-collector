@@ -5,6 +5,16 @@ def simplify_user_info(user_info):
         return user_info['email']
     return user_info.get('displayName', '')
 
+def extract_child_count(folder_info):
+    if isinstance(folder_info, dict):
+        return folder_info.get('childCount', 0)
+    return 0
+
+def extract_parent_name(parent_info):
+    if isinstance(parent_info, dict):
+        return parent_info.get('name', '')
+    return ''
+
 def filter_user_activity(user_activity_df):
     columns = [
         "Report Refresh Date", "User Principal Name", "Last Activity Date",
@@ -25,6 +35,7 @@ def filter_folders(folders_df):
     ]
     folders_df['createdBy'] = folders_df['createdBy'].apply(lambda x: simplify_user_info(x['user']))
     folders_df['lastModifiedBy'] = folders_df['lastModifiedBy'].apply(lambda x: simplify_user_info(x['user']))
+    folders_df['folder'] = folders_df['folder'].apply(extract_child_count)
     return folders_df[columns]
 
 def filter_subfolders(subfolders_df):
@@ -34,4 +45,6 @@ def filter_subfolders(subfolders_df):
     ]
     subfolders_df['createdBy'] = subfolders_df['createdBy'].apply(lambda x: simplify_user_info(x['user']))
     subfolders_df['lastModifiedBy'] = subfolders_df['lastModifiedBy'].apply(lambda x: simplify_user_info(x['user']))
+    subfolders_df['folder'] = subfolders_df['folder'].apply(extract_child_count)
+    subfolders_df['parentReference'] = subfolders_df['parentReference'].apply(extract_parent_name)
     return subfolders_df[columns]
