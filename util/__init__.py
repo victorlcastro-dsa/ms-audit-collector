@@ -1,1 +1,0 @@
-from .processor import process_user_activity_logs

@@ -1,7 +1,4 @@
-from service.sharepoint_user_activity import get_sharepoint_user_activity_logs
-from service.sharepoint_folder_activity import get_site_id, get_drives, list_folders
-from service.sharepoint_subfolder_activity import list_subfolders
-from service.sharepoint_user_info import get_user_info
+from service import get_sharepoint_user_activity_logs, get_site_id, get_drives, list_folders, list_subfolders #, get_user_info
 from export import save_audit_logs_to_excel
 
 # 🔹 Running Audit
@@ -21,9 +18,9 @@ if __name__ == "__main__":
         for folder in folders:
             subfolders.extend(list_subfolders(contas_a_receber_drive_id, folder['id']))
 
-        #user_info_list = []
-        #for user in user_activity_df['UserPrincipalName']:
+        # user_info_list = []
+        # for user in user_activity_df['User Principal Name']:
         #    user_info = get_user_info(user)
-        #    user_info_list.append(user_info)
+        #     user_info_list.append(user_info)
 
-        save_audit_logs_to_excel(user_activity_df, {"site_id": site_id}, drives, folders, subfolders)
+        save_audit_logs_to_excel(user_activity_df, {"site_id": site_id}, drives, folders, subfolders) #, user_info_list)
