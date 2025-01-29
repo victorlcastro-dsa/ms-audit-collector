@@ -21,9 +21,9 @@ if __name__ == "__main__":
         for folder in folders:
             subfolders.extend(list_subfolders(contas_a_receber_drive_id, folder['id']))
 
-        user_info_list = []
-        for user in user_activity_df['UserPrincipalName']:
-            user_info = get_user_info(user)
-            user_info_list.append(user_info)
+        #user_info_list = []
+        #for user in user_activity_df['UserPrincipalName']:
+        #    user_info = get_user_info(user)
+        #    user_info_list.append(user_info)
 
-        save_audit_logs_to_excel(user_activity_df, {"site_id": site_id}, drives, folders, subfolders, user_info_list)
+        save_audit_logs_to_excel(user_activity_df, {"site_id": site_id}, drives, folders, subfolders)

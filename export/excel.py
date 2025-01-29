@@ -1,7 +1,7 @@
 import pandas as pd
 import xlsxwriter
 
-def save_audit_logs_to_excel(user_activity_logs, site_info, drives, folders, subfolders, user_info_list):
+def save_audit_logs_to_excel(user_activity_logs, site_info, drives, folders, subfolders):
     writer = pd.ExcelWriter("Audit_Accounts_Receivable.xlsx", engine="xlsxwriter")
 
     # Save user activity logs
@@ -25,8 +25,8 @@ def save_audit_logs_to_excel(user_activity_logs, site_info, drives, folders, sub
     subfolders_df.to_excel(writer, sheet_name="Subfolders", index=False)
 
     # Save user info
-    user_info_df = pd.DataFrame(user_info_list)
-    user_info_df.to_excel(writer, sheet_name="User Info", index=False)
+    #user_info_df = pd.DataFrame(user_info_list)
+    #user_info_df.to_excel(writer, sheet_name="User Info", index=False)
 
     writer.close()
     print("✅ Audit saved in: Audit_Accounts_Receivable.xlsx")
