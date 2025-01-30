@@ -1,8 +1,9 @@
 import pandas as pd
 import xlsxwriter
 from util.filters import filter_user_activity, filter_drives, filter_folders, filter_subfolders
+from service import process_hits_response
 
-def save_audit_logs_to_excel(user_activity_logs, drives, folders, subfolders):
+def save_audit_logs_to_excel(user_activity_logs, drives, folders, subfolders, upload_files):
     writer = pd.ExcelWriter("Audit_Accounts_Receivable.xlsx", engine="xlsxwriter")
 
     # Save user activity logs
@@ -24,6 +25,10 @@ def save_audit_logs_to_excel(user_activity_logs, drives, folders, subfolders):
     subfolders_df = pd.DataFrame(subfolders)
     subfolders_df = filter_subfolders(subfolders_df)
     subfolders_df.to_excel(writer, sheet_name="Subfolders", index=False)
+
+    # Save upload files
+    upload_files_df = process_hits_response(upload_files)
+    upload_files_df.to_excel(writer, sheet_name="Upload Files", index=False)
 
     writer.close()
     print("✅ Audit saved in: Audit_Accounts_Receivable.xlsx")

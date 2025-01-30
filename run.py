@@ -1,5 +1,6 @@
 from service import get_sharepoint_user_activity_logs, get_site_id, get_drives, list_folders, list_subfolders
 from export import save_audit_logs_to_excel
+from service import search_files_by_creation_date
 
 # 🔹 Running Audit
 if __name__ == "__main__":
@@ -18,4 +19,7 @@ if __name__ == "__main__":
         for folder in folders:
             subfolders.extend(list_subfolders(contas_a_receber_drive_id, folder['id']))
 
-        save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders)
+        date = "2025-01-30"
+        upload_files = search_files_by_creation_date(date, contas_a_receber_drive_id)
+
+        save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders, upload_files)

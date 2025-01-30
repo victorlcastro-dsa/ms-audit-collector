@@ -10,3 +10,6 @@ class Config:
     AUTHORITY = os.getenv("AUTHORITY")
     SCOPE = [os.getenv("SCOPE")]
     ENDPOINT_USER_ACTIVITY = os.getenv("ENDPOINT_USER_ACTIVITY")
+    SEARCH_QUERY_PATH = os.getenv("SEARCH_QUERY_PATH")
+    SEARCH_QUERY_SIZE = int(os.getenv("SEARCH_QUERY_SIZE", 500))
+    SEARCH_QUERY_REGION = os.getenv("SEARCH_QUERY_REGION")
