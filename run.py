@@ -1,5 +1,5 @@
 from service import get_sharepoint_user_activity_logs, get_site_id, get_drives, list_folders, list_subfolders
-from export import save_audit_logs_to_excel
+from export import AuditLogExporter
 from service import search_files_by_creation_date
 from config import Config
 from auth import TokenManager
@@ -26,4 +26,5 @@ if __name__ == "__main__":
         date = "2025-01-30"
         upload_files = search_files_by_creation_date(date, contas_a_receber_drive_id)
 
-        save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders, upload_files)
+        exporter = AuditLogExporter()
+        exporter.save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders, upload_files)
