@@ -1,5 +1,8 @@
 import requests
 from auth import TokenManager
+import logging
+
+logger = logging.getLogger(__name__)
 
 def get_site_id():
     access_token = TokenManager().get_access_token()

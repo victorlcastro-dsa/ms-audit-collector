@@ -2,6 +2,9 @@ import requests
 import pandas as pd
 from auth import TokenManager
 from config import Config
+import logging
+
+logger = logging.getLogger(__name__)
 
 def search_files_by_creation_date(date, drive_id):
     access_token = TokenManager().get_access_token()
@@ -28,22 +31,22 @@ def search_files_by_creation_date(date, drive_id):
     response = requests.post(url, headers=headers, json=payload)
     response.raise_for_status()
     response_data = response.json()
-    print("🔍 API Response:", response_data)  # Log the response data
+    logger.debug("🔍 API Response: %s", response_data)  # Log the response data
     return response_data
 
 def process_hits_response(data):
     if not isinstance(data, dict) or 'value' not in data or not data['value']:
-        print("⚠️ No value found in the response.")
+        logger.warning("⚠️ No value found in the response.")
         return pd.DataFrame()
 
     hits_containers = data['value'][0].get('hitsContainers', [])
     if not hits_containers:
-        print("⚠️ No hitsContainers found in the response.")
+        logger.warning("⚠️ No hitsContainers found in the response.")
         return pd.DataFrame()
 
     hits = hits_containers[0].get('hits', [])
     if not hits:
-        print("⚠️ No hits found in the hitsContainers.")
+        logger.warning("⚠️ No hits found in the hitsContainers.")
         return pd.DataFrame()
 
     structured_data = []
@@ -59,8 +62,8 @@ def process_hits_response(data):
         })
 
     if not structured_data:
-        print("⚠️ No structured data found after processing hits.")
+        logger.warning("⚠️ No structured data found after processing hits.")
     else:
-        print(f"✅ Processed {len(structured_data)} hits successfully.")
+        logger.info("✅ Processed %d hits successfully.", len(structured_data))
 
     return pd.DataFrame(structured_data)

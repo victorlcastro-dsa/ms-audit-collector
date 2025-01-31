@@ -1,6 +1,11 @@
 from service import get_sharepoint_user_activity_logs, get_site_id, get_drives, list_folders, list_subfolders, search_files_by_creation_date
 from export import AuditLogExporter
 from config import Config
+from log import setup_logging
+import logging
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 class AuditCollector:
     def __init__(self):
@@ -8,11 +13,11 @@ class AuditCollector:
         self.exporter = AuditLogExporter()
 
     def collect_and_export_audit_logs(self):
-        print("📊 Collecting SharePoint activity logs...")
+        logger.info("📊 Collecting SharePoint activity logs...")
         user_activity_df = get_sharepoint_user_activity_logs()
 
         if user_activity_df.empty:
-            print("🚨 No audit data found!")
+            logger.error("🚨 No audit data found!")
             return
 
         site_id = self._get_site_id()

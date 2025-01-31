@@ -3,6 +3,8 @@ import logging
 from msal import ConfidentialClientApplication
 from config import Config
 
+logger = logging.getLogger(__name__)
+
 class AuthClient:
     def __init__(self):
         self.app = ConfidentialClientApplication(
@@ -41,8 +43,8 @@ class TokenManager:
             result = self.auth_client.acquire_token()
             self._token_cache = result["access_token"]
             self._token_expiry = time.time() + result["expires_in"] - Config.TOKEN_EXPIRY_BUFFER
-            logging.info("✅ Token obtained successfully!")
+            logger.info("✅ Token obtained successfully!")
             return self._token_cache
         except Exception as e:
-            logging.error(f"Error obtaining token: {e}")
+            logger.error(f"Error obtaining token: {e}")
             raise

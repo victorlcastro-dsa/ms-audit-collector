@@ -5,6 +5,8 @@ from util import DataFilter
 from service import process_hits_response
 from config import Config
 
+logger = logging.getLogger(__name__)
+
 class AuditLogExporter:
     def __init__(self, filename: str = Config.FILENAME):
         self.filename = filename
@@ -17,7 +19,7 @@ class AuditLogExporter:
             self._save_folders(writer, folders)
             self._save_subfolders(writer, subfolders)
             self._save_upload_files(writer, upload_files)
-        logging.info(f"✅ Audit saved in: {self.filename}")
+        logger.info("✅ Audit saved in: %s", self.filename)
 
     def _save_user_activity_logs(self, writer: pd.ExcelWriter, user_activity_logs: pd.DataFrame):
         user_activity_df = DataFilter.filter_user_activity(pd.DataFrame(user_activity_logs))
@@ -41,4 +43,4 @@ class AuditLogExporter:
 
     def _write_to_excel(self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str):
         df.to_excel(writer, sheet_name=sheet_name, index=False)
-        logging.info(f"✅ Data written to sheet: {sheet_name}")
+        logger.info("✅ Data written to sheet: %s", sheet_name)

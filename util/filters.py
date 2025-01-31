@@ -1,6 +1,9 @@
 import pandas as pd
 from config import Config
 from typing import Dict, Any
+import logging
+
+logger = logging.getLogger(__name__)
 
 class DataFilter:
     @staticmethod
