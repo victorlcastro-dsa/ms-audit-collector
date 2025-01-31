@@ -8,15 +8,33 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-async def get_sharepoint_user_activity_logs():
-    access_token = await TokenManager().get_access_token()
-    headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
-    async with aiohttp.ClientSession() as session:
-        async with session.get(Config.ENDPOINT_USER_ACTIVITY, headers=headers) as response:
-            if response.status == 403:
-                logger.error("🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
-                raise Exception("🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
-            response.raise_for_status()
-            csv_data = await response.text()
-            user_activity_df = pd.read_csv(StringIO(csv_data))
-            return DataFilter.filter_user_activity(user_activity_df)
+class SharePointUserActivityService:
+    def __init__(self):
+        self.token_manager = TokenManager()
+        self.endpoint = Config.ENDPOINT_USER_ACTIVITY
+
+    async def get_access_token(self):
+        return await self.token_manager.get_access_token()
+
+    async def fetch_user_activity_data(self, access_token: str) -> str:
+        headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.endpoint, headers=headers) as response:
+                if response.status == 403:
+                    logger.error("🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                    raise PermissionError("🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                response.raise_for_status()
+                return await response.text()
+
+    def process_user_activity_data(self, csv_data: str) -> pd.DataFrame:
+        user_activity_df = pd.read_csv(StringIO(csv_data))
+        return DataFilter.filter_user_activity(user_activity_df)
+
+    async def get_sharepoint_user_activity_report(self) -> pd.DataFrame:
+        try:
+            access_token = await self.get_access_token()
+            csv_data = await self.fetch_user_activity_data(access_token)
+            return self.process_user_activity_data(csv_data)
+        except Exception as e:
+            logger.error("🚨 ERROR: Failed to get SharePoint user activity report: %s", e)
+            raise

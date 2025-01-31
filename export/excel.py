@@ -2,7 +2,7 @@ import pandas as pd
 import xlsxwriter
 import logging
 from util import DataFilter
-from service import process_hits_response
+from service import SharePointUploadService
 from config import Config
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ class AuditLogExporter:
         self._write_to_excel(writer, subfolders_df, Config.SUBFOLDERS_SHEET)
 
     def _save_upload_files(self, writer: pd.ExcelWriter, upload_files: dict):
-        upload_files_df = process_hits_response(upload_files)
+        upload_files_df = SharePointUploadService.process_hits_response(upload_files)
         self._write_to_excel(writer, upload_files_df, Config.UPLOAD_FILES_SHEET)
 
     def _write_to_excel(self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str):

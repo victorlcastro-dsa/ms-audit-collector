@@ -1,4 +1,4 @@
-from .sharepoint_user_activity import get_sharepoint_user_activity_logs
-from .sharepoint_folder_activity import get_site_id, get_drives, list_folders
-from .sharepoint_subfolder_activity import list_subfolders
-from .sharepoint_upload_activity import search_files_by_creation_date, process_hits_response
+from .sharepoint_user_activity import SharePointUserActivityService
+from .sharepoint_folder_activity import SharePointFolderService
+from .sharepoint_subfolder_activity import SharePointSubfolderService
+from .sharepoint_upload_activity import SharePointUploadService
