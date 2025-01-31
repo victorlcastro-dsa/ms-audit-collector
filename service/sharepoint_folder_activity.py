@@ -1,4 +1,5 @@
 from .base_sharepoint import BaseSharePointService
+from config import Config
 
 class SharePointFolderService(BaseSharePointService):
     async def get_site_id(self):
@@ -7,7 +8,7 @@ class SharePointFolderService(BaseSharePointService):
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
-        url = "https://graph.microsoft.com/v1.0/sites/ssgruposrv.sharepoint.com:/sites/ContasaReceber-AGILLTDA"
+        url = f"https://graph.microsoft.com/v1.0/sites/{Config.SHAREPOINT_HOST}.sharepoint.com:/sites/{Config.SHAREPOINT_SITE}"
         site_data = await self.make_request("GET", url, headers=headers)
         return site_data['id']
 

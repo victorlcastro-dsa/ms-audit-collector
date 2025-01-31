@@ -1,5 +1,6 @@
 import logging
 import logging.config
+from config import Config
 
 def setup_logging():
     logging_config = {
@@ -20,7 +21,7 @@ def setup_logging():
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
                 'formatter': 'standard',
-                'filename': 'app.log'
+                'filename': Config.LOG_FILENAME
             },
         },
         'loggers': {

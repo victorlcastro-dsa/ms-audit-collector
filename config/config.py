@@ -9,7 +9,6 @@ class Config:
     CLIENT_SECRET = os.getenv("CLIENT_SECRET")
     AUTHORITY = os.getenv("AUTHORITY")
     SCOPE = [os.getenv("SCOPE")]
-    ENDPOINT_USER_ACTIVITY = os.getenv("ENDPOINT_USER_ACTIVITY")
     SEARCH_QUERY_PATH = os.getenv("SEARCH_QUERY_PATH")
     SEARCH_QUERY_SIZE = int(os.getenv("SEARCH_QUERY_SIZE", 500))
     SEARCH_QUERY_REGION = os.getenv("SEARCH_QUERY_REGION")
@@ -21,3 +20,9 @@ class Config:
     SUBFOLDERS_SHEET = os.getenv("SUBFOLDERS_SHEET", "Subfolders")
     UPLOAD_FILES_SHEET = os.getenv("UPLOAD_FILES_SHEET", "Upload Files")
     FILENAME = os.getenv("FILENAME", "Audit_Accounts_Receivable.xlsx")
+    LOG_FILENAME = os.getenv("LOG_FILENAME", "app.log")
+    SHAREPOINT_HOST = os.getenv("SHAREPOINT_HOST")
+    SHAREPOINT_SITE = os.getenv("SHAREPOINT_SITE")
+    DRIVE_NAME = os.getenv("DRIVE_NAME")
+    SEARCH_DATE = os.getenv("SEARCH_DATE")
+    USER_ACTIVITY_PERIOD = os.getenv("USER_ACTIVITY_PERIOD", "D7")

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class SharePointUserActivityService(BaseSharePointService):
     def __init__(self):
         super().__init__()
-        self.endpoint = Config.ENDPOINT_USER_ACTIVITY
+        self.endpoint = f"https://graph.microsoft.com/v1.0/reports/getSharePointActivityUserDetail(period='{Config.USER_ACTIVITY_PERIOD}')"
 
     async def fetch_user_activity_data(self, access_token: str) -> str:
         headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}

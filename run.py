@@ -27,10 +27,10 @@ class AuditCollector:
 
         site_id = await self.folder_service.get_site_id()
         drives = await self.folder_service.get_drives(site_id)
-        contas_a_receber_drive_id = self._get_drive_id(drives, 'Contas a Receber')
+        contas_a_receber_drive_id = self._get_drive_id(drives, Config.DRIVE_NAME)
         folders = await self.folder_service.list_folders(contas_a_receber_drive_id)
         subfolders = await self._list_all_subfolders(contas_a_receber_drive_id, folders)
-        upload_files = await self._search_files_by_creation_date("2025-01-30", contas_a_receber_drive_id)
+        upload_files = await self._search_files_by_creation_date(Config.SEARCH_DATE, contas_a_receber_drive_id)
 
         self.exporter.save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders, upload_files)
 
