@@ -1,4 +1,5 @@
 import pandas as pd
+from config import Config
 
 def simplify_user_info(user_info):
     if 'email' in user_info:
@@ -22,7 +23,11 @@ def filter_user_activity(user_activity_df):
         "Shared Internally File Count", "Shared Externally File Count",
         "Visited Page Count", "Report Period"
     ]
-    return user_activity_df[columns]
+    filtered_df = user_activity_df[columns]
+    email_filter = filtered_df["User Principal Name"].str.contains(
+        '|'.join(Config.EMAIL_FILTER_LIST), case=False, na=False
+    )
+    return filtered_df[email_filter]
 
 def filter_drives(drives_df):
     columns = ["createdDateTime", "lastModifiedDateTime", "name", "webUrl"]

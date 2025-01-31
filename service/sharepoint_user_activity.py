@@ -3,6 +3,7 @@ import pandas as pd
 from io import StringIO
 from config import Config
 from auth import get_access_token
+from util.filters import filter_user_activity
 
 def get_sharepoint_user_activity_logs():
     ACCESS_TOKEN = get_access_token()
@@ -16,4 +17,5 @@ def get_sharepoint_user_activity_logs():
 
     # The API data is returned as CSV
     csv_data = response.text
-    return pd.read_csv(StringIO(csv_data))
+    user_activity_df = pd.read_csv(StringIO(csv_data))
+    return filter_user_activity(user_activity_df)
