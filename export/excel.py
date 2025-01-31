@@ -1,7 +1,7 @@
 import pandas as pd
 import xlsxwriter
 import logging
-from util.filters import filter_user_activity, filter_drives, filter_folders, filter_subfolders
+from util import DataFilter
 from service import process_hits_response
 from config import Config
 
@@ -20,19 +20,19 @@ class AuditLogExporter:
         logging.info(f"✅ Audit saved in: {self.filename}")
 
     def _save_user_activity_logs(self, writer: pd.ExcelWriter, user_activity_logs: pd.DataFrame):
-        user_activity_df = filter_user_activity(pd.DataFrame(user_activity_logs))
+        user_activity_df = DataFilter.filter_user_activity(pd.DataFrame(user_activity_logs))
         self._write_to_excel(writer, user_activity_df, Config.USER_ACTIVITY_SHEET)
 
     def _save_drives(self, writer: pd.ExcelWriter, drives: list):
-        drives_df = filter_drives(pd.DataFrame(drives))
+        drives_df = DataFilter.filter_drives(pd.DataFrame(drives))
         self._write_to_excel(writer, drives_df, Config.DRIVES_SHEET)
 
     def _save_folders(self, writer: pd.ExcelWriter, folders: list):
-        folders_df = filter_folders(pd.DataFrame(folders))
+        folders_df = DataFilter.filter_folders(pd.DataFrame(folders))
         self._write_to_excel(writer, folders_df, Config.FOLDERS_SHEET)
 
     def _save_subfolders(self, writer: pd.ExcelWriter, subfolders: list):
-        subfolders_df = filter_subfolders(pd.DataFrame(subfolders))
+        subfolders_df = DataFilter.filter_subfolders(pd.DataFrame(subfolders))
         self._write_to_excel(writer, subfolders_df, Config.SUBFOLDERS_SHEET)
 
     def _save_upload_files(self, writer: pd.ExcelWriter, upload_files: dict):
