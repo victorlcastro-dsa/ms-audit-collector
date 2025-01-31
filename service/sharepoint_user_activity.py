@@ -1,20 +1,17 @@
+from .base_sharepoint import BaseSharePointService
 import aiohttp
 import pandas as pd
 from io import StringIO
 from config import Config
-from auth import TokenManager
 from util import DataFilter
 import logging
 
 logger = logging.getLogger(__name__)
 
-class SharePointUserActivityService:
+class SharePointUserActivityService(BaseSharePointService):
     def __init__(self):
-        self.token_manager = TokenManager()
+        super().__init__()
         self.endpoint = Config.ENDPOINT_USER_ACTIVITY
-
-    async def get_access_token(self):
-        return await self.token_manager.get_access_token()
 
     async def fetch_user_activity_data(self, access_token: str) -> str:
         headers = {"Authorization": f"Bearer {access_token}", "Accept": "application/json"}

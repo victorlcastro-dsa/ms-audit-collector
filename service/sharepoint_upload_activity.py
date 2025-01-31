@@ -1,18 +1,11 @@
-import aiohttp
+from .base_sharepoint import BaseSharePointService
 import pandas as pd
-from auth import TokenManager
 from config import Config
 import logging
 
 logger = logging.getLogger(__name__)
 
-class SharePointUploadService:
-    def __init__(self):
-        self.token_manager = TokenManager()
-
-    async def get_access_token(self):
-        return await self.token_manager.get_access_token()
-
+class SharePointUploadService(BaseSharePointService):
     async def search_files_by_creation_date(self, date, drive_id):
         access_token = await self.get_access_token()
         headers = {
@@ -34,13 +27,9 @@ class SharePointUploadService:
                 }
             ]
         }
-
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as response:
-                response.raise_for_status()
-                response_data = await response.json()
-                logger.debug("🔍 API Response: %s", response_data)  # Log the response data
-                return response_data
+        response_data = await self.make_request("POST", url, headers=headers, json=payload)
+        logger.debug("🔍 API Response: %s", response_data)
+        return response_data
 
     @staticmethod
     def process_hits_response(data):
