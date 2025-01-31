@@ -1,10 +1,10 @@
 import requests
 import pandas as pd
-from auth import get_access_token
+from auth import TokenManager
 from config import Config
 
 def search_files_by_creation_date(date, drive_id):
-    access_token = get_access_token()
+    access_token = TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json"

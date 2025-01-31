@@ -14,3 +14,4 @@ class Config:
     SEARCH_QUERY_SIZE = int(os.getenv("SEARCH_QUERY_SIZE", 500))
     SEARCH_QUERY_REGION = os.getenv("SEARCH_QUERY_REGION")
     EMAIL_FILTER_LIST = os.getenv("EMAIL_FILTER_LIST").split(',')
+    TOKEN_EXPIRY_BUFFER = int(os.getenv("TOKEN_EXPIRY_BUFFER", 60))

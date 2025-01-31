@@ -1,8 +1,8 @@
 import requests
-from auth import get_access_token
+from auth import TokenManager
 
 def get_site_id():
-    access_token = get_access_token()
+    access_token = TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
@@ -17,7 +17,7 @@ def get_site_id():
         response.raise_for_status()
 
 def get_drives(site_id):
-    access_token = get_access_token()
+    access_token = TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"
@@ -32,7 +32,7 @@ def get_drives(site_id):
         response.raise_for_status()
 
 def list_folders(drive_id):
-    access_token = get_access_token()
+    access_token = TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"

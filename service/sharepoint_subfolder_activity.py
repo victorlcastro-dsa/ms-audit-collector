@@ -1,8 +1,8 @@
 import requests
-from auth import get_access_token
+from auth import TokenManager
 
 def list_subfolders(drive_id, item_id):
-    access_token = get_access_token()
+    access_token = TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Accept": "application/json"

@@ -1,1 +1,1 @@
-from .auth import get_access_token
+from .auth import TokenManager

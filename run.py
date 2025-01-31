@@ -1,9 +1,13 @@
 from service import get_sharepoint_user_activity_logs, get_site_id, get_drives, list_folders, list_subfolders
 from export import save_audit_logs_to_excel
 from service import search_files_by_creation_date
+from config import Config
+from auth import TokenManager
 
 # 🔹 Running Audit
 if __name__ == "__main__":
+    config = Config()
+
     print("📊 Collecting SharePoint activity logs...")
     user_activity_df = get_sharepoint_user_activity_logs()
 
