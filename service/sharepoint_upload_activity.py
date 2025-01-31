@@ -1,4 +1,4 @@
-import requests
+import aiohttp
 import pandas as pd
 from auth import TokenManager
 from config import Config
@@ -6,8 +6,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def search_files_by_creation_date(date, drive_id):
-    access_token = TokenManager().get_access_token()
+async def search_files_by_creation_date(date, drive_id):
+    access_token = await TokenManager().get_access_token()
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json"
@@ -28,11 +28,12 @@ def search_files_by_creation_date(date, drive_id):
         ]
     }
 
-    response = requests.post(url, headers=headers, json=payload)
-    response.raise_for_status()
-    response_data = response.json()
-    logger.debug("🔍 API Response: %s", response_data)  # Log the response data
-    return response_data
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, json=payload) as response:
+            response.raise_for_status()
+            response_data = await response.json()
+            logger.debug("🔍 API Response: %s", response_data)  # Log the response data
+            return response_data
 
 def process_hits_response(data):
     if not isinstance(data, dict) or 'value' not in data or not data['value']:

@@ -3,3 +3,4 @@ pandas
 msal
 python-dotenv
 xlsxwriter
+aiohttp
