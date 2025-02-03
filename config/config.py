@@ -34,3 +34,4 @@ class Config:
     AUDIT_QUERY_SUCCESS_STATUS = os.getenv("AUDIT_QUERY_SUCCESS_STATUS", "succeeded")
     AUDIT_QUERY_RUNNING_STATUS = os.getenv("AUDIT_QUERY_RUNNING_STATUS", "running")
     AUDIT_QUERY_NOT_STARTED_STATUS = os.getenv("AUDIT_QUERY_NOT_STARTED_STATUS", "notStarted")
+    AUDIT_SHEET = os.getenv("AUDIT_SHEET", "Audit")

@@ -45,7 +45,7 @@ class AuditLogExporter:
 
     def _save_audit_logs(self, writer: pd.ExcelWriter, audit_logs: pd.DataFrame):
         audit_logs_df = DataFilter.filter_audit_logs(audit_logs)
-        self._write_to_excel(writer, audit_logs_df, "Audit")
+        self._write_to_excel(writer, audit_logs_df, Config.AUDIT_SHEET)
 
     def _write_to_excel(self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str):
         df.to_excel(writer, sheet_name=sheet_name, index=False)
