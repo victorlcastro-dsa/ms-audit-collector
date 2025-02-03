@@ -66,3 +66,9 @@ class DataFilter:
         subfolders_df['folder'] = subfolders_df['folder'].apply(DataFilter.extract_child_count)
         subfolders_df['parentReference'] = subfolders_df['parentReference'].apply(DataFilter.extract_parent_name)
         return subfolders_df[columns]
+
+    @staticmethod
+    def filter_audit_logs(audit_logs_df: pd.DataFrame) -> pd.DataFrame:
+        """Filter audit logs data based on predefined columns."""
+        columns = ["createdDateTime", "auditLogRecordType", "operation", "userType", "objectId", "userPrincipalName"]
+        return audit_logs_df[columns]

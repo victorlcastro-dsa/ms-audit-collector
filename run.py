@@ -1,4 +1,4 @@
-from service import SharePointUserActivityService, SharePointFolderService, SharePointSubfolderService, SharePointUploadService
+from service import SharePointUserActivityService, SharePointFolderService, SharePointSubfolderService, SharePointUploadService, AuditLogQuery
 from export import AuditLogExporter
 from config import Config
 from log import setup_logging
@@ -16,6 +16,7 @@ class AuditCollector:
         self.folder_service = SharePointFolderService()
         self.subfolder_service = SharePointSubfolderService()
         self.upload_service = SharePointUploadService()
+        self.audit_log_query_service = AuditLogQuery()
 
     async def collect_and_export_audit_logs(self):
         logger.info("📊 Collecting SharePoint activity logs...")
@@ -32,7 +33,10 @@ class AuditCollector:
         subfolders = await self._list_all_subfolders(contas_a_receber_drive_id, folders)
         upload_files = await self._search_files_by_creation_date(Config.SEARCH_DATE, contas_a_receber_drive_id)
 
-        self.exporter.save_audit_logs_to_excel(user_activity_df, drives, folders, subfolders, upload_files)
+        self.exporter.save_audit_logs_to_excel(user_activity_logs=user_activity_df, drives=drives, folders=folders, subfolders=subfolders, upload_files=upload_files)
+
+        audit_log_df = await self.audit_log_query_service.run_audit_log_query()
+        self.exporter.save_audit_logs_to_excel(user_activity_logs=user_activity_df, drives=drives, folders=folders, subfolders=subfolders, upload_files=upload_files, audit_logs=audit_log_df)
 
     def _get_drive_id(self, drives, drive_name):
         return next(drive['id'] for drive in drives if drive['name'] == drive_name)
