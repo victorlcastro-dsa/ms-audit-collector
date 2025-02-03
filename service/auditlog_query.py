@@ -79,21 +79,21 @@ class AuditLogQuery(BaseSharePointService):
             status_response = await self.get_audit_query_status(audit_log_query_id)
             status = status_response.get('status')
             logger.info(f"Audit query status: {status}")
-            if status in ['succeeded']:
+            if status in [Config.AUDIT_QUERY_SUCCESS_STATUS]:
                 return
-            elif status in ['notStarted', 'running']:
-                await asyncio.sleep(10)
+            elif status in [Config.AUDIT_QUERY_NOT_STARTED_STATUS, Config.AUDIT_QUERY_RUNNING_STATUS]:
+                await asyncio.sleep(Config.AUDIT_QUERY_MONITOR_INTERVAL)
             else:
                 raise Exception(f"Unexpected status: {status}")
 
     async def run_audit_log_query(self) -> pd.DataFrame:
-        start_date = datetime(2025, 1, 30, 0, 0)
-        end_date = datetime(2025, 1, 31, 0, 0, 0)
+        start_date = datetime.fromisoformat(Config.AUDIT_QUERY_START_DATE)
+        end_date = datetime.fromisoformat(Config.AUDIT_QUERY_END_DATE)
         query_response = await self.create_audit_query(
-            display_name="File Access Audit",
+            display_name=Config.AUDIT_QUERY_DISPLAY_NAME,
             start_date=start_date,
             end_date=end_date,
-            record_type_filters=["sharePointFileOperation"],
+            record_type_filters=Config.AUDIT_QUERY_RECORD_TYPE_FILTERS,
             object_id_filters=[f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{Config.SHAREPOINT_SITE}/{Config.DRIVE_NAME}"]
         )
         audit_log_query_id = query_response['id']
