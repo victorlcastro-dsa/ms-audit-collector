@@ -22,7 +22,7 @@ class AuditLogExporter:
             self._save_upload_files(writer, upload_files)
             if audit_logs is not None:
                 self._save_audit_logs(writer, audit_logs)
-        logger.info("✅ Audit saved in: %s", self.filename)
+        logger.info("Audit saved in: %s", self.filename)
 
     def _save_user_activity_logs(self, writer: pd.ExcelWriter, user_activity_logs: pd.DataFrame):
         user_activity_df = DataFilter.filter_user_activity(
@@ -54,4 +54,4 @@ class AuditLogExporter:
 
     def _write_to_excel(self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str):
         df.to_excel(writer, sheet_name=sheet_name, index=False)
-        logger.info("✅ Data written to sheet: %s", sheet_name)
+        logger.info("Data written to sheet: %s", sheet_name)

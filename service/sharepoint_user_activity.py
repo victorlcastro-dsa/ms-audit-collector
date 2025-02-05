@@ -22,9 +22,9 @@ class SharePointUserActivityService(BaseSharePointService):
             async with session.get(self.endpoint, headers=headers) as response:
                 if response.status == 403:
                     logger.error(
-                        "🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
                     raise PermissionError(
-                        "🚨 ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
                 response.raise_for_status()
                 return await response.text()
 
@@ -39,5 +39,5 @@ class SharePointUserActivityService(BaseSharePointService):
             return self.process_user_activity_data(csv_data)
         except Exception as e:
             logger.error(
-                "🚨 ERROR: Failed to get SharePoint user activity report: %s", e)
+                "ERROR: Failed to get SharePoint user activity report: %s", e)
             raise

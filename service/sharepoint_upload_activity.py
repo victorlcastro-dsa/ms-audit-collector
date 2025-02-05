@@ -29,23 +29,23 @@ class SharePointUploadService(BaseSharePointService):
             ]
         }
         response_data = await self.make_request("POST", url, headers=headers, json=payload)
-        logger.debug("🔍 API Response: %s", response_data)
+        logger.debug("API Response: %s", response_data)
         return response_data
 
     @staticmethod
     def process_hits_response(data):
         if not isinstance(data, dict) or 'value' not in data or not data['value']:
-            logger.warning("⚠️ No value found in the response.")
+            logger.warning("No value found in the response.")
             return pd.DataFrame()
 
         hits_containers = data['value'][0].get('hitsContainers', [])
         if not hits_containers:
-            logger.warning("⚠️ No hitsContainers found in the response.")
+            logger.warning("No hitsContainers found in the response.")
             return pd.DataFrame()
 
         hits = hits_containers[0].get('hits', [])
         if not hits:
-            logger.warning("⚠️ No hits found in the hitsContainers.")
+            logger.warning("No hits found in the hitsContainers.")
             return pd.DataFrame()
 
         structured_data = []
@@ -62,9 +62,9 @@ class SharePointUploadService(BaseSharePointService):
 
         if not structured_data:
             logger.warning(
-                "⚠️ No structured data found after processing hits.")
+                "No structured data found after processing hits.")
         else:
-            logger.info("✅ Processed %d hits successfully.",
+            logger.info("Processed %d hits successfully.",
                         len(structured_data))
 
         return pd.DataFrame(structured_data)

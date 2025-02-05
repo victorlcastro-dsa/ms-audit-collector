@@ -20,11 +20,11 @@ class AuditCollector:
         self.audit_log_query_service = AuditLogQuery()
 
     async def collect_and_export_audit_logs(self):
-        logger.info("📊 Collecting SharePoint activity logs...")
+        logger.info("Collecting SharePoint activity logs...")
         user_activity_df = await self.user_activity_service.get_sharepoint_user_activity_report()
 
         if user_activity_df.empty:
-            logger.error("🚨 No audit data found!")
+            logger.error("No audit data found!")
             return
 
         site_id = await self.folder_service.get_site_id()
