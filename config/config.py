@@ -3,6 +3,7 @@ import os
 
 load_dotenv()
 
+
 class Config:
     TENANT_ID = os.getenv("TENANT_ID")
     CLIENT_ID = os.getenv("CLIENT_ID")
@@ -26,12 +27,20 @@ class Config:
     DRIVE_NAME = os.getenv("DRIVE_NAME")
     SEARCH_DATE = os.getenv("SEARCH_DATE")
     USER_ACTIVITY_PERIOD = os.getenv("USER_ACTIVITY_PERIOD", "D7")
-    AUDIT_QUERY_DISPLAY_NAME = os.getenv("AUDIT_QUERY_DISPLAY_NAME", "File Access Audit")
-    AUDIT_QUERY_START_DATE = os.getenv("AUDIT_QUERY_START_DATE", "2025-01-30T00:00:00")
-    AUDIT_QUERY_END_DATE = os.getenv("AUDIT_QUERY_END_DATE", "2025-01-31T00:00:00")
-    AUDIT_QUERY_RECORD_TYPE_FILTERS = os.getenv("AUDIT_QUERY_RECORD_TYPE_FILTERS", "sharePointFileOperation").split(',')
-    AUDIT_QUERY_MONITOR_INTERVAL = int(os.getenv("AUDIT_QUERY_MONITOR_INTERVAL", 10))
-    AUDIT_QUERY_SUCCESS_STATUS = os.getenv("AUDIT_QUERY_SUCCESS_STATUS", "succeeded")
-    AUDIT_QUERY_RUNNING_STATUS = os.getenv("AUDIT_QUERY_RUNNING_STATUS", "running")
-    AUDIT_QUERY_NOT_STARTED_STATUS = os.getenv("AUDIT_QUERY_NOT_STARTED_STATUS", "notStarted")
+    AUDIT_QUERY_DISPLAY_NAME = os.getenv(
+        "AUDIT_QUERY_DISPLAY_NAME", "File Access Audit")
+    AUDIT_QUERY_START_DATE = os.getenv(
+        "AUDIT_QUERY_START_DATE", "2025-01-30T00:00:00")
+    AUDIT_QUERY_END_DATE = os.getenv(
+        "AUDIT_QUERY_END_DATE", "2025-01-31T00:00:00")
+    AUDIT_QUERY_RECORD_TYPE_FILTERS = os.getenv(
+        "AUDIT_QUERY_RECORD_TYPE_FILTERS", "sharePointFileOperation").split(',')
+    AUDIT_QUERY_MONITOR_INTERVAL = int(
+        os.getenv("AUDIT_QUERY_MONITOR_INTERVAL", 10))
+    AUDIT_QUERY_SUCCESS_STATUS = os.getenv(
+        "AUDIT_QUERY_SUCCESS_STATUS", "succeeded")
+    AUDIT_QUERY_RUNNING_STATUS = os.getenv(
+        "AUDIT_QUERY_RUNNING_STATUS", "running")
+    AUDIT_QUERY_NOT_STARTED_STATUS = os.getenv(
+        "AUDIT_QUERY_NOT_STARTED_STATUS", "notStarted")
     AUDIT_SHEET = os.getenv("AUDIT_SHEET", "Audit")

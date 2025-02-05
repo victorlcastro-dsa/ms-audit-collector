@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class SharePointUploadService(BaseSharePointService):
     async def search_files_by_creation_date(self, date, drive_id):
         access_token = await self.get_access_token()
@@ -60,8 +61,10 @@ class SharePointUploadService(BaseSharePointService):
             })
 
         if not structured_data:
-            logger.warning("⚠️ No structured data found after processing hits.")
+            logger.warning(
+                "⚠️ No structured data found after processing hits.")
         else:
-            logger.info("✅ Processed %d hits successfully.", len(structured_data))
+            logger.info("✅ Processed %d hits successfully.",
+                        len(structured_data))
 
         return pd.DataFrame(structured_data)

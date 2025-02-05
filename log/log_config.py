@@ -2,6 +2,7 @@ import logging
 import logging.config
 from config import Config
 
+
 def setup_logging():
     logging_config = {
         'version': 1,

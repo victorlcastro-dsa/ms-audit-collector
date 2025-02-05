@@ -1,6 +1,7 @@
 from .base_sharepoint import BaseSharePointService
 from config import Config
 
+
 class SharePointFolderService(BaseSharePointService):
     async def get_site_id(self):
         access_token = await self.get_access_token()
@@ -8,7 +9,8 @@ class SharePointFolderService(BaseSharePointService):
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
-        url = f"https://graph.microsoft.com/v1.0/sites/{Config.SHAREPOINT_HOST}.sharepoint.com:/sites/{Config.SHAREPOINT_SITE}"
+        url = f"https://graph.microsoft.com/v1.0/sites/{
+            Config.SHAREPOINT_HOST}.sharepoint.com:/sites/{Config.SHAREPOINT_SITE}"
         site_data = await self.make_request("GET", url, headers=headers)
         return site_data['id']
 
@@ -28,6 +30,7 @@ class SharePointFolderService(BaseSharePointService):
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
-        url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root/children"
+        url = f"https://graph.microsoft.com/v1.0/drives/{
+            drive_id}/root/children"
         folders_data = await self.make_request("GET", url, headers=headers)
         return folders_data['value']

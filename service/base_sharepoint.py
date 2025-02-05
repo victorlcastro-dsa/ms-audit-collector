@@ -4,6 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class BaseSharePointService:
     def __init__(self):
         self.token_manager = TokenManager()

@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class DataFilter:
     @staticmethod
     def simplify_user_info(user_info: Dict[str, Any]) -> str:
@@ -49,9 +50,12 @@ class DataFilter:
             "createdBy", "createdDateTime", "lastModifiedBy",
             "lastModifiedDateTime", "name", "webUrl", "folder", "size"
         ]
-        folders_df['createdBy'] = folders_df['createdBy'].apply(lambda x: DataFilter.simplify_user_info(x['user']))
-        folders_df['lastModifiedBy'] = folders_df['lastModifiedBy'].apply(lambda x: DataFilter.simplify_user_info(x['user']))
-        folders_df['folder'] = folders_df['folder'].apply(DataFilter.extract_child_count)
+        folders_df['createdBy'] = folders_df['createdBy'].apply(
+            lambda x: DataFilter.simplify_user_info(x['user']))
+        folders_df['lastModifiedBy'] = folders_df['lastModifiedBy'].apply(
+            lambda x: DataFilter.simplify_user_info(x['user']))
+        folders_df['folder'] = folders_df['folder'].apply(
+            DataFilter.extract_child_count)
         return folders_df[columns]
 
     @staticmethod
@@ -61,14 +65,19 @@ class DataFilter:
             "createdBy", "createdDateTime", "lastModifiedBy",
             "name", "parentReference", "webUrl", "folder", "size"
         ]
-        subfolders_df['createdBy'] = subfolders_df['createdBy'].apply(lambda x: DataFilter.simplify_user_info(x['user']))
-        subfolders_df['lastModifiedBy'] = subfolders_df['lastModifiedBy'].apply(lambda x: DataFilter.simplify_user_info(x['user']))
-        subfolders_df['folder'] = subfolders_df['folder'].apply(DataFilter.extract_child_count)
-        subfolders_df['parentReference'] = subfolders_df['parentReference'].apply(DataFilter.extract_parent_name)
+        subfolders_df['createdBy'] = subfolders_df['createdBy'].apply(
+            lambda x: DataFilter.simplify_user_info(x['user']))
+        subfolders_df['lastModifiedBy'] = subfolders_df['lastModifiedBy'].apply(
+            lambda x: DataFilter.simplify_user_info(x['user']))
+        subfolders_df['folder'] = subfolders_df['folder'].apply(
+            DataFilter.extract_child_count)
+        subfolders_df['parentReference'] = subfolders_df['parentReference'].apply(
+            DataFilter.extract_parent_name)
         return subfolders_df[columns]
 
     @staticmethod
     def filter_audit_logs(audit_logs_df: pd.DataFrame) -> pd.DataFrame:
         """Filter audit logs data based on predefined columns."""
-        columns = ["createdDateTime", "auditLogRecordType", "operation", "userType", "objectId", "userPrincipalName"]
+        columns = ["createdDateTime", "auditLogRecordType",
+                   "operation", "userType", "objectId", "userPrincipalName"]
         return audit_logs_df[columns]

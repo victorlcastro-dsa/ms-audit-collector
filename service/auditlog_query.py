@@ -9,6 +9,7 @@ from service.base_sharepoint import BaseSharePointService
 
 logger = logging.getLogger(__name__)
 
+
 class AuditLogQuery(BaseSharePointService):
     async def create_audit_query(
         self,
@@ -56,7 +57,8 @@ class AuditLogQuery(BaseSharePointService):
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
-        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{audit_log_query_id}"
+        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
+            audit_log_query_id}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 response.raise_for_status()
@@ -68,7 +70,8 @@ class AuditLogQuery(BaseSharePointService):
             "Authorization": f"Bearer {access_token}",
             "Accept": "application/json"
         }
-        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{audit_log_query_id}/records"
+        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
+            audit_log_query_id}/records"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 response.raise_for_status()
@@ -94,7 +97,8 @@ class AuditLogQuery(BaseSharePointService):
             start_date=start_date,
             end_date=end_date,
             record_type_filters=Config.AUDIT_QUERY_RECORD_TYPE_FILTERS,
-            object_id_filters=[f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{Config.SHAREPOINT_SITE}/{Config.DRIVE_NAME}"]
+            object_id_filters=[f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{
+                Config.SHAREPOINT_SITE}/{Config.DRIVE_NAME}"]
         )
         audit_log_query_id = query_response['id']
         await self.monitor_audit_query(audit_log_query_id)

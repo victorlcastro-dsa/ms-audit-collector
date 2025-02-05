@@ -6,6 +6,7 @@ from config import Config
 
 logger = logging.getLogger(__name__)
 
+
 class AuthClient:
     def __init__(self):
         self.app = ConfidentialClientApplication(
@@ -22,12 +23,14 @@ class AuthClient:
         else:
             raise Exception(f"Error obtaining token: {result}")
 
+
 class TokenManager:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            cls._instance = super(TokenManager, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(TokenManager, cls).__new__(
+                cls, *args, **kwargs)
         return cls._instance
 
     def __init__(self):
@@ -44,7 +47,8 @@ class TokenManager:
         try:
             result = await self.auth_client.acquire_token()
             self._token_cache = result["access_token"]
-            self._token_expiry = time.time() + result["expires_in"] - Config.TOKEN_EXPIRY_BUFFER
+            self._token_expiry = time.time(
+            ) + result["expires_in"] - Config.TOKEN_EXPIRY_BUFFER
             logger.info("✅ Token obtained successfully!")
             return self._token_cache
         except Exception as e:
