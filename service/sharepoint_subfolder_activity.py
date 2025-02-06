@@ -6,9 +6,10 @@ class SharePointSubfolderService(BaseSharePointService):
         access_token = await self.get_access_token()
         headers = {
             "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
-        url = f"https://graph.microsoft.com/v1.0/drives/{
-            drive_id}/items/{item_id}/children"
+        url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/items/{
+            item_id
+        }/children"
         subfolders_data = await self.make_request("GET", url, headers=headers)
-        return subfolders_data['value']
+        return subfolders_data["value"]

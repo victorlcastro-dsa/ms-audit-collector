@@ -13,7 +13,15 @@ class AuditLogExporter:
         self.filename = filename
         logging.basicConfig(level=logging.INFO)
 
-    def save_audit_logs_to_excel(self, user_activity_logs: pd.DataFrame, drives: list, folders: list, subfolders: list, upload_files: dict, audit_logs: pd.DataFrame = None):
+    def save_audit_logs_to_excel(
+        self,
+        user_activity_logs: pd.DataFrame,
+        drives: list,
+        folders: list,
+        subfolders: list,
+        upload_files: dict,
+        audit_logs: pd.DataFrame = None,
+    ):
         with pd.ExcelWriter(self.filename, engine="xlsxwriter") as writer:
             self._save_user_activity_logs(writer, user_activity_logs)
             self._save_drives(writer, drives)
@@ -24,11 +32,13 @@ class AuditLogExporter:
                 self._save_audit_logs(writer, audit_logs)
         logger.info("Audit saved in: %s", self.filename)
 
-    def _save_user_activity_logs(self, writer: pd.ExcelWriter, user_activity_logs: pd.DataFrame):
+    def _save_user_activity_logs(
+        self, writer: pd.ExcelWriter, user_activity_logs: pd.DataFrame
+    ):
         user_activity_df = DataFilter.filter_user_activity(
-            pd.DataFrame(user_activity_logs))
-        self._write_to_excel(writer, user_activity_df,
-                             Config.USER_ACTIVITY_SHEET)
+            pd.DataFrame(user_activity_logs)
+        )
+        self._write_to_excel(writer, user_activity_df, Config.USER_ACTIVITY_SHEET)
 
     def _save_drives(self, writer: pd.ExcelWriter, drives: list):
         drives_df = DataFilter.filter_drives(pd.DataFrame(drives))
@@ -43,15 +53,15 @@ class AuditLogExporter:
         self._write_to_excel(writer, subfolders_df, Config.SUBFOLDERS_SHEET)
 
     def _save_upload_files(self, writer: pd.ExcelWriter, upload_files: dict):
-        upload_files_df = SharePointUploadService.process_hits_response(
-            upload_files)
-        self._write_to_excel(writer, upload_files_df,
-                             Config.UPLOAD_FILES_SHEET)
+        upload_files_df = SharePointUploadService.process_hits_response(upload_files)
+        self._write_to_excel(writer, upload_files_df, Config.UPLOAD_FILES_SHEET)
 
     def _save_audit_logs(self, writer: pd.ExcelWriter, audit_logs: pd.DataFrame):
         audit_logs_df = DataFilter.filter_audit_logs(audit_logs)
         self._write_to_excel(writer, audit_logs_df, Config.AUDIT_SHEET)
 
-    def _write_to_excel(self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str):
+    def _write_to_excel(
+        self, writer: pd.ExcelWriter, df: pd.DataFrame, sheet_name: str
+    ):
         df.to_excel(writer, sheet_name=sheet_name, index=False)
         logger.info("Data written to sheet: %s", sheet_name)

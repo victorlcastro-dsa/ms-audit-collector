@@ -23,12 +23,12 @@ class AuditLogQuery(BaseSharePointService):
         object_id_filters: Optional[List[str]] = None,
         administrative_unit_id_filters: Optional[List[str]] = None,
         keyword_filter: Optional[str] = None,
-        service_filter: Optional[str] = None
+        service_filter: Optional[str] = None,
     ) -> dict:
         access_token = await self.get_access_token()
         headers = {
             "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
         url = "https://graph.microsoft.com/beta/security/auditLog/queries"
         payload = {
@@ -42,7 +42,7 @@ class AuditLogQuery(BaseSharePointService):
             "objectIdFilters": object_id_filters or [],
             "administrativeUnitIdFilters": administrative_unit_id_filters or [],
             "keywordFilter": keyword_filter,
-            "serviceFilter": service_filter
+            "serviceFilter": service_filter,
         }
         payload = {k: v for k, v in payload.items() if v}
         logger.debug(f"Sending request to {url} with payload: {payload}")
@@ -55,10 +55,11 @@ class AuditLogQuery(BaseSharePointService):
         access_token = await self.get_access_token()
         headers = {
             "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
         url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
-            audit_log_query_id}"
+            audit_log_query_id
+        }"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 response.raise_for_status()
@@ -68,10 +69,11 @@ class AuditLogQuery(BaseSharePointService):
         access_token = await self.get_access_token()
         headers = {
             "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
         url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
-            audit_log_query_id}/records"
+            audit_log_query_id
+        }/records"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
                 response.raise_for_status()
@@ -80,11 +82,14 @@ class AuditLogQuery(BaseSharePointService):
     async def monitor_audit_query(self, audit_log_query_id: str):
         while True:
             status_response = await self.get_audit_query_status(audit_log_query_id)
-            status = status_response.get('status')
+            status = status_response.get("status")
             logger.info(f"Audit query status: {status}")
             if status in [Config.AUDIT_QUERY_SUCCESS_STATUS]:
                 return
-            elif status in [Config.AUDIT_QUERY_NOT_STARTED_STATUS, Config.AUDIT_QUERY_RUNNING_STATUS]:
+            elif status in [
+                Config.AUDIT_QUERY_NOT_STARTED_STATUS,
+                Config.AUDIT_QUERY_RUNNING_STATUS,
+            ]:
                 await asyncio.sleep(Config.AUDIT_QUERY_MONITOR_INTERVAL)
             else:
                 raise Exception(f"Unexpected status: {status}")
@@ -97,10 +102,13 @@ class AuditLogQuery(BaseSharePointService):
             start_date=start_date,
             end_date=end_date,
             record_type_filters=Config.AUDIT_QUERY_RECORD_TYPE_FILTERS,
-            object_id_filters=[f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{
-                Config.SHAREPOINT_SITE}/{Config.DRIVE_NAME}"]
+            object_id_filters=[
+                f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{
+                    Config.SHAREPOINT_SITE
+                }/{Config.DRIVE_NAME}"
+            ],
         )
-        audit_log_query_id = query_response['id']
+        audit_log_query_id = query_response["id"]
         await self.monitor_audit_query(audit_log_query_id)
         results = await self.get_audit_query_results(audit_log_query_id)
-        return pd.DataFrame(results['value'])
+        return pd.DataFrame(results["value"])

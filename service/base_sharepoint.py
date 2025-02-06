@@ -14,6 +14,8 @@ class BaseSharePointService:
 
     async def make_request(self, method, url, headers=None, json=None):
         async with aiohttp.ClientSession() as session:
-            async with session.request(method, url, headers=headers, json=json) as response:
+            async with session.request(
+                method, url, headers=headers, json=json
+            ) as response:
                 response.raise_for_status()
                 return await response.json()

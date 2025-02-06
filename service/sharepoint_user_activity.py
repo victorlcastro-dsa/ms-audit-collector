@@ -13,18 +13,23 @@ class SharePointUserActivityService(BaseSharePointService):
     def __init__(self):
         super().__init__()
         self.endpoint = f"https://graph.microsoft.com/v1.0/reports/getSharePointActivityUserDetail(period='{
-            Config.USER_ACTIVITY_PERIOD}')"
+            Config.USER_ACTIVITY_PERIOD
+        }')"
 
     async def fetch_user_activity_data(self, access_token: str) -> str:
-        headers = {"Authorization": f"Bearer {
-            access_token}", "Accept": "application/json"}
+        headers = {
+            "Authorization": f"Bearer {access_token}",
+            "Accept": "application/json",
+        }
         async with aiohttp.ClientSession() as session:
             async with session.get(self.endpoint, headers=headers) as response:
                 if response.status == 403:
                     logger.error(
-                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD."
+                    )
                     raise PermissionError(
-                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD.")
+                        "ERROR: No permission to access logs. Check if Reports.Read.All is granted in Azure AD."
+                    )
                 response.raise_for_status()
                 return await response.text()
 
@@ -38,6 +43,5 @@ class SharePointUserActivityService(BaseSharePointService):
             csv_data = await self.fetch_user_activity_data(access_token)
             return self.process_user_activity_data(csv_data)
         except Exception as e:
-            logger.error(
-                "ERROR: Failed to get SharePoint user activity report: %s", e)
+            logger.error("ERROR: Failed to get SharePoint user activity report: %s", e)
             raise
