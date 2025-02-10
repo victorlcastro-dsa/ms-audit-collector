@@ -32,34 +32,23 @@ class SharePointUploadService(BaseSharePointService):
                     ],
                     "region": Config.SEARCH_QUERY_REGION,
                     "driveId": drive_id,
-                    "size": Config.SEARCH_QUERY_SIZE,
                 }
             ]
         }
-        response_data = await self.make_request(
-            "POST", url, headers=headers, json=payload
+        response_data = await self.make_paginated_request_with_size(
+            "POST", url, headers=headers, json=payload, size=Config.SEARCH_QUERY_SIZE
         )
         logger.debug("API Response: %s", response_data)
         return response_data
 
     @staticmethod
     def process_hits_response(data):
-        if not isinstance(data, dict) or "value" not in data or not data["value"]:
+        if not data:
             logger.warning("No value found in the response.")
             return pd.DataFrame()
 
-        hits_containers = data["value"][0].get("hitsContainers", [])
-        if not hits_containers:
-            logger.warning("No hitsContainers found in the response.")
-            return pd.DataFrame()
-
-        hits = hits_containers[0].get("hits", [])
-        if not hits:
-            logger.warning("No hits found in the hitsContainers.")
-            return pd.DataFrame()
-
         structured_data = []
-        for hit in hits:
+        for hit in data:
             resource = hit.get("resource", {})
 
             structured_data.append(

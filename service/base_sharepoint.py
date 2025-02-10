@@ -35,3 +35,25 @@ class BaseSharePointService:
                     url = data.get("@odata.nextLink")
                     params = None
         return results
+
+    async def make_paginated_request_with_size(
+        self, method, url, headers=None, json=None, size=100
+    ):
+        results = []
+        from_index = 0
+        while True:
+            if json:
+                json["requests"][0]["from"] = from_index
+                json["requests"][0]["size"] = size
+            async with aiohttp.ClientSession() as session:
+                async with session.request(
+                    method, url, headers=headers, json=json
+                ) as response:
+                    response.raise_for_status()
+                    data = await response.json()
+                    hits = data["value"][0].get("hitsContainers", [])[0].get("hits", [])
+                    if not hits:
+                        break
+                    results.extend(hits)
+                    from_index += size
+        return results
