@@ -19,7 +19,9 @@ class SharePointUploadService(BaseSharePointService):
                 {
                     "entityTypes": ["driveItem"],
                     "query": {
-                        "queryString": f'created:{date} AND path:"{Config.SEARCH_QUERY_PATH}" AND ContentTypeId:0x0101*'
+                        "queryString": f'created:{date} AND path:"{
+                            Config.SEARCH_QUERY_PATH
+                        }" AND ContentTypeId:0x0101*'
                     },
                     "fields": [
                         "name",

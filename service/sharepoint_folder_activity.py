@@ -22,8 +22,8 @@ class SharePointFolderService(BaseSharePointService):
             "Accept": "application/json",
         }
         url = f"https://graph.microsoft.com/v1.0/sites/{site_id}/drives"
-        drives_data = await self.make_request("GET", url, headers=headers)
-        return drives_data["value"]
+        drives_data = await self.make_paginated_request("GET", url, headers=headers)
+        return drives_data
 
     async def list_folders(self, drive_id):
         access_token = await self.get_access_token()
@@ -32,5 +32,5 @@ class SharePointFolderService(BaseSharePointService):
             "Accept": "application/json",
         }
         url = f"https://graph.microsoft.com/v1.0/drives/{drive_id}/root/children"
-        folders_data = await self.make_request("GET", url, headers=headers)
-        return folders_data["value"]
+        folders_data = await self.make_paginated_request("GET", url, headers=headers)
+        return folders_data

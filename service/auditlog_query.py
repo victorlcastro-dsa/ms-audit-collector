@@ -74,10 +74,8 @@ class AuditLogQuery(BaseSharePointService):
         url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
             audit_log_query_id
         }/records"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                response.raise_for_status()
-                return await response.json()
+        results_data = await self.make_paginated_request("GET", url, headers=headers)
+        return results_data
 
     async def monitor_audit_query(self, audit_log_query_id: str):
         while True:
@@ -111,4 +109,4 @@ class AuditLogQuery(BaseSharePointService):
         audit_log_query_id = query_response["id"]
         await self.monitor_audit_query(audit_log_query_id)
         results = await self.get_audit_query_results(audit_log_query_id)
-        return pd.DataFrame(results["value"])
+        return pd.DataFrame(results)
