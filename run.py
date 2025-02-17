@@ -1,15 +1,19 @@
+import asyncio
+import logging
+import time
+
+import schedule
+
+from config import Config
+from export import AuditLogExporter
+from log import setup_logging
 from service import (
-    SharePointUserActivityService,
+    AuditLogQuery,
     SharePointFolderService,
     SharePointSubfolderService,
     SharePointUploadService,
-    AuditLogQuery,
+    SharePointUserActivityService,
 )
-from export import AuditLogExporter
-from config import Config
-from log import setup_logging
-import logging
-import asyncio
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -77,7 +81,20 @@ class AuditCollector:
         return await self.upload_service.search_files_by_creation_date(date, drive_id)
 
 
-# 🔹 Running Audit
-if __name__ == "__main__":
+async def run_audit():
+    Config.update_dates()
     collector = AuditCollector()
-    asyncio.run(collector.collect_and_export_audit_logs())
+    await collector.collect_and_export_audit_logs()
+
+
+def job():
+    asyncio.run(run_audit())
+
+
+# Schedule the job to run once a day
+schedule.every().day.at("00:00").do(job)
+
+# Run the scheduler
+while True:
+    schedule.run_pending()
+    time.sleep(1)

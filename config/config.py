@@ -1,5 +1,7 @@
-from dotenv import load_dotenv
 import os
+from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -42,3 +44,10 @@ class Config:
         "AUDIT_QUERY_NOT_STARTED_STATUS", "notStarted"
     )
     AUDIT_SHEET = os.getenv("AUDIT_SHEET", "Audit")
+
+    @staticmethod
+    def update_dates():
+        yesterday = datetime.now() - timedelta(days=1)
+        Config.SEARCH_DATE = yesterday.strftime("%Y-%m-%d")
+        Config.AUDIT_QUERY_START_DATE = yesterday.strftime("%Y-%m-%dT00:00:00")
+        Config.AUDIT_QUERY_END_DATE = yesterday.strftime("%Y-%m-%dT23:59:59")
