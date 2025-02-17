@@ -26,10 +26,11 @@ class TokenManager:
             )
             self._initialized = True
 
-    async def acquire_token(self):
+    @classmethod
+    async def acquire_token(cls):
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
-            None, self.app.acquire_token_for_client, Config.SCOPE
+            None, cls().app.acquire_token_for_client, Config.SCOPE
         )
         if "access_token" in result:
             return result
