@@ -1,10 +1,13 @@
-from .base_sharepoint import BaseSharePointService
+import logging
+from io import StringIO
+
 import aiohttp
 import pandas as pd
-from io import StringIO
+
 from config import Config
 from util import DataFilter
-import logging
+
+from .base_sharepoint import BaseSharePointService
 
 logger = logging.getLogger(__name__)
 
@@ -12,15 +15,10 @@ logger = logging.getLogger(__name__)
 class SharePointUserActivityService(BaseSharePointService):
     def __init__(self):
         super().__init__()
-        self.endpoint = f"https://graph.microsoft.com/v1.0/reports/getSharePointActivityUserDetail(period='{
-            Config.USER_ACTIVITY_PERIOD
-        }')"
+        self.endpoint = f"https://graph.microsoft.com/v1.0/reports/getSharePointActivityUserDetail(period='{Config.USER_ACTIVITY_PERIOD}')"
 
     async def fetch_user_activity_data(self, access_token: str) -> str:
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json",
-        }
+        headers = await self.get_headers()
         async with aiohttp.ClientSession() as session:
             async with session.get(self.endpoint, headers=headers) as response:
                 if response.status == 403:

@@ -1,27 +1,24 @@
-from .base_sharepoint import BaseSharePointService
-import pandas as pd
-from config import Config
 import logging
+
+import pandas as pd
+
+from config import Config
+
+from .base_sharepoint import BaseSharePointService
 
 logger = logging.getLogger(__name__)
 
 
 class SharePointUploadService(BaseSharePointService):
     async def search_files_by_creation_date(self, date, drive_id):
-        access_token = await self.get_access_token()
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
-        }
+        headers = await self.get_headers("application/json")
         url = "https://graph.microsoft.com/v1.0/search/query"
         payload = {
             "requests": [
                 {
                     "entityTypes": ["driveItem"],
                     "query": {
-                        "queryString": f'created:{date} AND path:"{
-                            Config.SEARCH_QUERY_PATH
-                        }" AND ContentTypeId:0x0101*'
+                        "queryString": f'created:{date} AND path:"{Config.SEARCH_QUERY_PATH}" AND ContentTypeId:0x0101*'
                     },
                     "fields": [
                         "name",

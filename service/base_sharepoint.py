@@ -1,6 +1,8 @@
-import aiohttp
-from auth import TokenManager
 import logging
+
+import aiohttp
+
+from auth import TokenManager
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +13,14 @@ class BaseSharePointService:
 
     async def get_access_token(self):
         return await self.token_manager.get_access_token()
+
+    async def get_headers(self, content_type="application/json"):
+        access_token = await self.get_access_token()
+        return {
+            "Authorization": f"Bearer {access_token}",
+            "Accept": "application/json",
+            "Content-Type": content_type,
+        }
 
     async def make_request(self, method, url, headers=None, json=None):
         async with aiohttp.ClientSession() as session:

@@ -1,9 +1,10 @@
-import aiohttp
 import asyncio
 import logging
-import pandas as pd
 from datetime import datetime
 from typing import List, Optional
+
+import pandas as pd
+
 from config import Config
 from service.base_sharepoint import BaseSharePointService
 
@@ -25,11 +26,7 @@ class AuditLogQuery(BaseSharePointService):
         keyword_filter: Optional[str] = None,
         service_filter: Optional[str] = None,
     ) -> dict:
-        access_token = await self.get_access_token()
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
-        }
+        headers = await self.get_headers()
         url = "https://graph.microsoft.com/beta/security/auditLog/queries"
         payload = {
             "displayName": display_name,
@@ -46,36 +43,17 @@ class AuditLogQuery(BaseSharePointService):
         }
         payload = {k: v for k, v in payload.items() if v}
         logger.debug(f"Sending request to {url} with payload: {payload}")
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=payload) as response:
-                response.raise_for_status()
-                return await response.json()
+        return await self.make_request("POST", url, headers=headers, json=payload)
 
     async def get_audit_query_status(self, audit_log_query_id: str) -> dict:
-        access_token = await self.get_access_token()
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json",
-        }
-        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
-            audit_log_query_id
-        }"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                response.raise_for_status()
-                return await response.json()
+        headers = await self.get_headers()
+        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{audit_log_query_id}"
+        return await self.make_request("GET", url, headers=headers)
 
     async def get_audit_query_results(self, audit_log_query_id: str) -> dict:
-        access_token = await self.get_access_token()
-        headers = {
-            "Authorization": f"Bearer {access_token}",
-            "Accept": "application/json",
-        }
-        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{
-            audit_log_query_id
-        }/records"
-        results_data = await self.make_paginated_request("GET", url, headers=headers)
-        return results_data
+        headers = await self.get_headers()
+        url = f"https://graph.microsoft.com/beta/security/auditLog/queries/{audit_log_query_id}/records"
+        return await self.make_paginated_request("GET", url, headers=headers)
 
     async def monitor_audit_query(self, audit_log_query_id: str):
         while True:
@@ -101,9 +79,7 @@ class AuditLogQuery(BaseSharePointService):
             end_date=end_date,
             record_type_filters=Config.AUDIT_QUERY_RECORD_TYPE_FILTERS,
             object_id_filters=[
-                f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{
-                    Config.SHAREPOINT_SITE
-                }/{Config.DRIVE_NAME}"
+                f"https://{Config.SHAREPOINT_HOST}.sharepoint.com/sites/{Config.SHAREPOINT_SITE}/{Config.DRIVE_NAME}"
             ],
         )
         audit_log_query_id = query_response["id"]
